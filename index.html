@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3ed">
+  <meta name="description" content="Notes on code, curiosity, and the craft of solving problems.">
+  <title>sharath.press — Notes on code, curiosity &amp; craft</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f3ed;
+      --paper-deep: #ece9df;
+      --ink: #172a25;
+      --muted: #69736c;
+      --line: #d9d8cd;
+      --forest: #173c32;
+      --forest-light: #234d40;
+      --lime: #d3ee8c;
+      --coral: #ec7657;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    .shell { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+    .masthead { min-height: 82px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); gap: 24px; }
+    .wordmark { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 760; letter-spacing: -.055em; font-size: 20px; }
+    .wordmark-mark { width: 27px; height: 27px; border-radius: 50%; background: var(--coral); display: grid; place-items: center; color: #fff9ec; font-family: var(--serif); font-size: 16px; font-weight: 500; }
+    .wordmark small { font-size: 12px; letter-spacing: .01em; color: var(--muted); font-weight: 500; margin-left: 2px; }
+    .nav { display: flex; align-items: center; gap: 30px; font-size: 13px; color: #46544c; }
+    .nav a { text-decoration: none; transition: color .2s ease; }
+    .nav a:hover, .nav a:focus-visible { color: var(--coral); }
+    .nav .nav-github { color: var(--ink); border-bottom: 1px solid #9ba49b; padding-bottom: 3px; }
+    .hero { padding: 72px 0 58px; display: grid; grid-template-columns: 1.25fr .75fr; gap: 64px; align-items: end; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; color: #68756c; text-transform: uppercase; letter-spacing: .14em; font-size: 10px; font-weight: 720; }
+    .eyebrow::before { content: ""; display: block; width: 25px; height: 1px; background: var(--coral); }
+    h1 { font-family: var(--serif); font-weight: 500; letter-spacing: -.052em; font-size: clamp(49px, 6.5vw, 82px); line-height: .98; margin: 24px 0 24px; max-width: 710px; }
+    h1 em { color: #7c8e55; font-weight: 500; }
+    .hero-copy { max-width: 510px; color: #5d6962; font-size: 16px; line-height: 1.75; margin: 0; }
+    .hero-note { min-height: 228px; position: relative; overflow: hidden; background: var(--forest); color: #f8f5e9; padding: 28px; border-radius: 3px; display: flex; flex-direction: column; justify-content: space-between; }
+    .hero-note::before, .hero-note::after { content: ""; position: absolute; pointer-events: none; }
+    .hero-note::before { width: 225px; height: 225px; right: -32px; top: -54px; border: 1px solid rgba(211,238,140,.32); border-radius: 50%; box-shadow: 0 0 0 22px rgba(211,238,140,.04), 0 0 0 48px rgba(211,238,140,.035); }
+    .hero-note::after { width: 87px; height: 87px; border-radius: 50%; right: 39px; top: 34px; background: var(--lime); opacity: .96; }
+    .note-top, .note-bottom { position: relative; z-index: 1; }
+    .note-top { font-size: 10px; text-transform: uppercase; letter-spacing: .15em; color: #c5d1bd; }
+    .note-bottom { max-width: 220px; font-family: var(--serif); font-size: 25px; line-height: 1.16; letter-spacing: -.025em; }
+    .note-bottom span { display: block; font-family: var(--sans); font-size: 11px; line-height: 1.5; letter-spacing: .02em; color: #c5d1bd; margin-top: 13px; }
+    .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; padding: 22px 0 19px; border-top: 1px solid var(--line); }
+    .section-heading h2 { font-family: var(--serif); font-weight: 500; font-size: 34px; letter-spacing: -.04em; margin: 0; }
+    .section-heading p { color: var(--muted); margin: 0 0 4px; font-size: 12px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 0 0 23px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 7px; }
+    .filter { cursor: pointer; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: #68736b; padding: 8px 13px; font-size: 11px; transition: .18s ease; }
+    .filter:hover, .filter:focus-visible { border-color: #87957e; color: var(--ink); }
+    .filter[aria-pressed="true"] { background: var(--forest); border-color: var(--forest); color: #f7f4eb; }
+    .search { width: min(240px, 35vw); position: relative; }
+    .search input { width: 100%; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; outline: 0; padding: 9px 4px 9px 27px; color: var(--ink); font-size: 12px; }
+    .search input:focus { border-color: var(--forest); }
+    .search::before { content: "⌕"; position: absolute; left: 3px; top: 4px; font-size: 20px; line-height: 1; color: #829087; }
+    .post-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; padding-bottom: 82px; }
+    .post-card { min-height: 248px; display: flex; flex-direction: column; background: #fbfaf6; border: 1px solid #e3e1d8; padding: 24px 25px 21px; cursor: pointer; text-align: left; color: inherit; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+    .post-card:hover, .post-card:focus-visible { transform: translateY(-3px); border-color: #bdc5b6; box-shadow: 0 10px 25px rgba(24,47,37,.06); outline: none; }
+    .post-card.featured { grid-column: 1 / -1; min-height: 260px; flex-direction: row; align-items: stretch; justify-content: space-between; gap: 40px; background: var(--paper-deep); border-color: var(--paper-deep); }
+    .post-main { max-width: 690px; display: flex; flex-direction: column; }
+    .post-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; color: #707b70; text-transform: uppercase; letter-spacing: .12em; font-size: 9px; font-weight: 700; }
+    .post-meta .dot { width: 3px; height: 3px; background: var(--coral); border-radius: 50%; }
+    .post-card h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(24px, 3vw, 36px); letter-spacing: -.04em; line-height: 1.12; margin: 27px 0 10px; }
+    .post-card:not(.featured) h3 { font-size: 27px; margin-top: 28px; }
+    .post-card p { color: #68736b; line-height: 1.6; font-size: 13px; margin: 0; max-width: 520px; }
+    .post-foot { display: flex; justify-content: space-between; align-items: center; gap: 15px; color: #738075; font-size: 10px; margin-top: auto; padding-top: 28px; }
+    .post-tag { border: 1px solid #d4d6ca; border-radius: 999px; padding: 6px 10px; color: #58665b; }
+    .post-arrow { width: 40px; height: 40px; border: 1px solid #b8c0b2; border-radius: 50%; color: var(--forest); display: grid; place-items: center; flex: none; align-self: center; font-size: 18px; transition: .2s ease; }
+    .post-card:hover .post-arrow { background: var(--forest); color: #fff; border-color: var(--forest); }
+    .empty-state { grid-column: 1 / -1; color: var(--muted); padding: 40px 0; font-family: var(--serif); font-size: 22px; }
+    .about { display: grid; grid-template-columns: .8fr 1.2fr; gap: 42px; padding: 34px 0 68px; border-top: 1px solid var(--line); }
+    .about h2 { font-family: var(--serif); font-size: 30px; font-weight: 500; letter-spacing: -.04em; margin: 0; }
+    .about p { color: #647067; line-height: 1.75; font-size: 13px; max-width: 560px; margin: 0; }
+    footer { border-top: 1px solid var(--line); min-height: 83px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: #778077; font-size: 10px; letter-spacing: .03em; }
+    footer a { text-decoration: none; border-bottom: 1px solid #c2c7bc; padding-bottom: 2px; }
+    dialog { width: min(690px, calc(100% - 32px)); max-height: min(84vh, 860px); border: 1px solid #d9d8cd; background: var(--paper); color: var(--ink); padding: 0; box-shadow: 0 24px 90px rgba(14,30,22,.25); }
+    dialog::backdrop { background: rgba(18,34,27,.55); backdrop-filter: blur(3px); }
+    .dialog-inner { padding: clamp(24px, 5vw, 52px); }
+    .dialog-close { float: right; border: 1px solid var(--line); border-radius: 50%; width: 34px; height: 34px; background: transparent; color: var(--ink); cursor: pointer; font-size: 17px; }
+    .dialog-inner h2 { font-family: var(--serif); font-size: clamp(34px, 6vw, 52px); line-height: 1.03; letter-spacing: -.045em; font-weight: 500; margin: 30px 0 12px; }
+    .dialog-body { color: #58665e; font-family: var(--serif); font-size: 18px; line-height: 1.75; }
+    .dialog-body p { margin: 17px 0; }
+    :focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 34px, 600px); }
+      .masthead { min-height: 70px; }
+      .wordmark small { display: none; }
+      .nav { gap: 17px; font-size: 11px; }
+      .hero { grid-template-columns: 1fr; gap: 31px; padding: 55px 0 43px; }
+      .hero-note { min-height: 190px; }
+      .post-grid { grid-template-columns: 1fr; padding-bottom: 58px; }
+      .post-card.featured { grid-column: auto; min-height: 250px; }
+      .toolbar { align-items: flex-start; flex-direction: column; }
+      .search { width: 100%; }
+      .about { grid-template-columns: 1fr; gap: 14px; padding-bottom: 48px; }
+    }
+    @media (max-width: 440px) {
+      .nav { gap: 12px; }
+      .nav a:nth-child(2) { display: none; }
+      .post-card.featured { gap: 18px; }
+      .post-arrow { width: 34px; height: 34px; }
+      .section-heading { align-items: flex-start; flex-direction: column; gap: 5px; }
+      footer { align-items: flex-start; flex-direction: column; justify-content: center; padding: 18px 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <a class="wordmark" href="#top" aria-label="sharath.press home"><span class="wordmark-mark">s.</span> sharath.press <small>notes &amp; essays</small></a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#journal">Journal</a>
+        <a href="#about">About</a>
+        <a class="nav-github" href="https://github.com/sharathkumargr7/leetcode-solutions" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <div class="eyebrow">A personal notebook · Vol. 01</div>
+          <h1 id="hero-title">Think clearly.<br>Build <em>patiently.</em></h1>
+          <p class="hero-copy">A small home for notes on code, curiosity, and the craft of solving problems. Ideas in progress, written down before the next tab takes over.</p>
+        </div>
+        <aside class="hero-note" aria-label="About this journal">
+          <div class="note-top">The long way around</div>
+          <div class="note-bottom">Good questions deserve room to breathe.<span>Field notes from the learning process.</span></div>
+        </aside>
+      </section>
+
+      <section id="journal" aria-labelledby="journal-title">
+        <div class="section-heading">
+          <h2 id="journal-title">The journal</h2>
+          <p id="result-count" aria-live="polite">4 notes</p>
+        </div>
+        <div class="toolbar">
+          <div class="filters" role="group" aria-label="Filter notes by topic">
+            <button class="filter" type="button" data-filter="all" aria-pressed="true">Everything</button>
+            <button class="filter" type="button" data-filter="thinking" aria-pressed="false">Thinking</button>
+            <button class="filter" type="button" data-filter="code" aria-pressed="false">Code</button>
+            <button class="filter" type="button" data-filter="practice" aria-pressed="false">Practice</button>
+          </div>
+          <label class="search"><span class="visually-hidden" style="position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden">Search notes</span><input id="search" type="search" placeholder="Search the journal" autocomplete="off"></label>
+        </div>
+        <div class="post-grid" id="post-grid">
+          <button class="post-card featured" type="button" data-category="thinking" data-search="the shape of a good problem problem solving clarity constraints question">
+            <span class="post-main">
+              <span class="post-meta"><span>01</span><span class="dot"></span><time datetime="2026-10-22">Oct 22, 2026</time><span class="dot"></span><span>5 min read</span></span>
+              <h3>The shape of a good problem</h3>
+              <p>Before looking for an answer, make the question easier to see. A few notes on constraints, clarity, and the useful pause before the first line of code.</p>
+              <span class="post-foot"><span class="post-tag">Thinking</span><span>Read note ↗</span></span>
+            </span>
+            <span class="post-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button class="post-card" type="button" data-category="code" data-search="write the explanation you wish you had readability code notes debugging">
+            <span class="post-meta"><span>02</span><span class="dot"></span><time datetime="2026-10-10">Oct 10, 2026</time><span class="dot"></span><span>4 min read</span></span>
+            <h3>Write the explanation you wish you had</h3>
+            <p>A solution gets more useful when the reasoning survives the moment it was written.</p>
+            <span class="post-foot"><span class="post-tag">Code</span><span>Read note ↗</span></span>
+          </button>
+          <button class="post-card" type="button" data-category="practice" data-search="a small framework for getting unstuck learning practice debugging">
+            <span class="post-meta"><span>03</span><span class="dot"></span><time datetime="2026-09-18">Sep 18, 2026</time><span class="dot"></span><span>3 min read</span></span>
+            <h3>A small framework for getting unstuck</h3>
+            <p>When progress stalls, change the size of the question. A repeatable way to find the next useful step.</p>
+            <span class="post-foot"><span class="post-tag">Practice</span><span>Read note ↗</span></span>
+          </button>
+          <button class="post-card" type="button" data-category="code" data-search="notes from the problem set algorithms leetcode practice code">
+            <span class="post-meta"><span>04</span><span class="dot"></span><time datetime="2026-09-03">Sep 03, 2026</time><span class="dot"></span><span>4 min read</span></span>
+            <h3>Notes from the problem set</h3>
+            <p>Patterns are easier to remember when they come with the trade-offs that made them useful.</p>
+            <span class="post-foot"><span class="post-tag">Code</span><span>Read note ↗</span></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="about" id="about" aria-labelledby="about-title">
+        <h2 id="about-title">A place to think out loud.</h2>
+        <p>Sharath.press is a personal notebook for ideas that are worth keeping: explanations, experiments, and the occasional lesson learned the slow way. The best notes start with a question and leave room for a better one.</p>
+      </section>
+    </main>
+
+    <footer>
+      <span>© <span id="year">2026</span> sharath.press · Made with care, updated when there’s something to say.</span>
+      <a href="https://github.com/sharathkumargr7/leetcode-solutions" target="_blank" rel="noreferrer">Find the code ↗</a>
+    </footer>
+  </div>
+
+  <dialog id="post-dialog" aria-labelledby="dialog-title">
+    <article class="dialog-inner">
+      <button class="dialog-close" type="button" aria-label="Close note">×</button>
+      <div class="post-meta" id="dialog-meta"></div>
+      <h2 id="dialog-title"></h2>
+      <div class="dialog-body" id="dialog-body"></div>
+    </article>
+  </dialog>
+  <script>
+    const notes = [
+      {
+        title: "The shape of a good problem", date: "Oct 22, 2026", category: "Thinking", time: "5 min read",
+        body: [
+          "The first version of a problem is rarely the version you need to solve. It arrives wrapped in examples, assumptions, and the pressure to start doing something. The useful first move is often to unwrap it.",
+          "I like to write down three things before reaching for a solution: what must be true, what may change, and what the result should look like. Those constraints turn a vague challenge into a smaller surface I can reason about. If one of them is unclear, that is the next question to ask.",
+          "A clear problem does not make the work easy. It makes the work visible. And visible work is easier to test, discuss, and improve."
+        ]
+      },
+      {
+        title: "Write the explanation you wish you had", date: "Oct 10, 2026", category: "Code", time: "4 min read",
+        body: [
+          "Code records what a machine should do. A short explanation records why this approach made sense. Both matter, especially when the solution is still fresh and the trade-offs are easy to remember.",
+          "The explanation does not need to narrate every line. Capture the key idea, the edge case that shaped it, and the alternative you decided against. Those are the details that disappear first when you return weeks later.",
+          "Writing for your future self is a practical form of maintenance. It gives the next session a starting point instead of another investigation."
+        ]
+      },
+      {
+        title: "A small framework for getting unstuck", date: "Sep 18, 2026", category: "Practice", time: "3 min read",
+        body: [
+          "When a problem stops moving, I try to shrink the next step until it can be checked. Can I reproduce the behavior? Can I name the invariant? Can I test one small input by hand?",
+          "A tiny question creates a tiny feedback loop. The answer may not solve the whole problem, but it should change what I know. If it does not, I choose a different question rather than repeating the same attempt with more force.",
+          "Getting unstuck is often less about inspiration and more about finding the next experiment that can teach you something."
+        ]
+      },
+      {
+        title: "Notes from the problem set", date: "Sep 03, 2026", category: "Code", time: "4 min read",
+        body: [
+          "Recognizing a pattern is helpful; knowing when it applies is better. A technique becomes durable when I can describe the signal that points to it, the condition it relies on, and the case where it stops being a good fit.",
+          "That is why I keep notes alongside practice solutions. The code is one answer. The explanation is a compact map back to the reasoning, including the complexity and the edge cases that matter.",
+          "The collection is still growing. The goal is not to memorize every problem, but to get a little quicker at seeing the structure of the next one."
+        ]
+      }
+    ];
+    const cards = [...document.querySelectorAll(".post-card")];
+    const filters = [...document.querySelectorAll(".filter")];
+    const search = document.getElementById("search");
+    const resultCount = document.getElementById("result-count");
+    const dialog = document.getElementById("post-dialog");
+    let activeFilter = "all";
+    function filterNotes() {
+      const query = search.value.trim().toLowerCase();
+      let count = 0;
+      cards.forEach(card => {
+        const matchesCategory = activeFilter === "all" || card.dataset.category === activeFilter;
+        const matchesSearch = !query || card.dataset.search.includes(query);
+        card.hidden = !(matchesCategory && matchesSearch);
+        if (!card.hidden) count++;
+      });
+      let empty = document.querySelector(".empty-state");
+      if (count === 0 && !empty) {
+        empty = document.createElement("p"); empty.className = "empty-state"; empty.textContent = "No notes found. Try another search.";
+        document.getElementById("post-grid").append(empty);
+      } else if (count > 0 && empty) empty.remove();
+      resultCount.textContent = `${count} ${count === 1 ? "note" : "notes"}`;
+    }
+    filters.forEach(button => button.addEventListener("click", () => {
+      activeFilter = button.dataset.filter;
+      filters.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+      filterNotes();
+    }));
+    search.addEventListener("input", filterNotes);
+    cards.forEach((card, index) => card.addEventListener("click", () => {
+      const note = notes[index];
+      document.getElementById("dialog-title").textContent = note.title;
+      document.getElementById("dialog-meta").innerHTML = `<span>${note.category}</span><span class="dot"></span><span>${note.date}</span><span class="dot"></span><span>${note.time}</span>`;
+      const body = document.getElementById("dialog-body"); body.replaceChildren(...note.body.map(text => { const p = document.createElement("p"); p.textContent = text; return p; }));
+      dialog.showModal();
+    }));
+    document.querySelector(".dialog-close").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
